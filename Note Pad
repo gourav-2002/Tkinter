@@ -1,0 +1,178 @@
+from tkinter import *
+from tkinter import messagebox
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+import os
+#**************************************************************************#
+
+# THE STARING OF THE FUNCTION OF OUR NOTEPAD
+
+#**************************************************************************#
+
+# USE FOR THE MORE OPTION 
+def more():
+    messagebox.showinfo("about", "By this you can convert your text into the handwriting documnet.")
+
+# USE FOR THE HELP OPTION 
+def helpfun():
+    messagebox.showinfo(" help","Type your text and click on convert button to convert.")
+ 
+# COPY THE TEXT 
+def copyfun():
+    area.event_generate(("<<Cut>>"))
+
+# CUT THE TEXT 
+def cutfun():
+    area.event_generate(("<<Copy>>"))
+
+
+# PASTE THE TEXT 
+def pastefun():
+    area.event_generate(("<<Paste>>"))
+
+#"------------------------------------------------"#
+
+# FOR OPENING THE NEW FILE
+
+def funNewfile():
+    global file
+    root.title("Untitled - Notepad")
+    file = None
+    area.delete(1.0 , END)
+
+#"------------------------------------------------"#
+
+# FOR OPEN THE EXISSTING FILE
+
+def funOpen():
+    global file
+    file = askopenfilename(defaultextension=".txt",
+                           filetypes=[("All Files", "*.*"),
+                                     ("Text Documents", "*.txt")])
+    if file == "":
+        file = None
+    else:
+        root.title(os.path.basename(file) + " - Notepad")
+        area.delete(1.0, END)
+        f = open(file, "r")
+        area.insert(1.0, f.read())
+        f.close()
+
+#"------------------------------------------------"#
+
+# TO SAVE THE FILE
+
+def funsave():
+    global file
+    if file == None:
+        file = asksaveasfilename(initialfile = 'Untitled.txt', defaultextension=".txt",
+                           filetypes=[("All Files", "*.*"),
+                                     ("Text Documents", "*.txt")])
+        if file =="":
+            file = None
+
+        else:
+            #Save as a new file
+            f = open(file, "w")
+            f.write(area.get(1.0, END))
+            f.close()
+
+            root.title(os.path.basename(file) + " - Notepad")
+            print("File Saved")
+    else:
+        # Save the file
+        f = open(file, "w")
+        f.write(area.get(1.0, END))
+        f.close()
+
+#"------------------------------------------------"#
+
+
+ #**************************************************************************#
+
+ # THIS IS THE START OF OUR TKINTER WIDGET
+
+ #**************************************************************************#
+
+if __name__ == "__main__":
+
+    root = Tk()
+    root.title("Notepad")
+
+     #**************************************************************************#
+
+    #"------------------------------------------------"#
+    # THIS IS FOR THE SCROLL BAR OF THE TEXT AREA
+
+    scrollbar = Scrollbar(root)
+    scrollbar.pack(fill = Y ,  side = RIGHT)
+    area = Text(root , yscrollcommand = scrollbar.set)
+    area.pack()
+    scrollbar.config(command = area.yview)
+
+    # THE END OF THE SCROLL BAR AREA FUNCTION 
+
+    #"------------------------------------------------"#
+
+    #**************************************************************************#
+
+    #"------------------------------------------------"#
+
+    #  THIS IS FOR THE MENU 
+    menubar = Menu(root)
+
+    # FOR THE FILE MENU 
+    file = Menu(menubar, tearoff=0)
+    menubar.add_cascade(label ='File', menu = file)   
+    file.add_command(label ='New File', command = funNewfile)
+    file.add_command(label ='Open...', command = funOpen)
+    file.add_command(label ='Save', command = funsave)
+    file.add_separator()
+    file.add_command(label ='Exit', command = root.destroy)
+
+    # FOR THE EDIT MENU 
+    edit = Menu(menubar , tearoff = 0)
+    menubar.add_cascade(label = "Edit" , menu = edit)
+    edit.add_command(label = 'Cut' , command = cutfun)
+    edit.add_command(label = 'Copy' , command = copyfun)
+    edit.add_command(label = 'Paste' , command = pastefun)
+
+    # FOR THE FONT MENU
+    font = Menu(menubar,tearoff=0)
+    menubar.add_cascade(label="Font" , menu = font)
+    font.add_command(label = "Font",command= None)
+
+    #FOR THE SIZE MENU
+    size = Menu(menubar , tearoff = 0)
+    menubar.add_cascade(label = "Size" , menu = size)
+    size.add_command(label = "Size" , command = None)
+
+    # FOR THE ABOUT OF THE MENU 
+    about = Menu(menubar , tearoff=0)
+    menubar.add_cascade(label = "About" , menu = about)
+    about.add_command(label = "more" , command = more)
+
+    # FOR THE HELP TO USER
+    Help = Menu(menubar , tearoff=0)
+    menubar.add_cascade(label = "Help" , menu = Help)
+    Help.add_command(label = "help", command = helpfun)
+
+    root.config(menu = menubar)
+
+    # MENU FUNCTION IS END HERE.
+    #"------------------------------------------------"#
+
+    #**************************************************************************#
+
+    #"------------------------------------------------"#
+
+    # THE CLOSE OF THE ROOT OF TKINTER 
+    root.mainloop()
+
+
+    #**************************************************************************#
+
+    #************------------- END OF THE PROGRAM ------------*****************#
+
+    #**************************************************************************#
+
+    
